@@ -1,0 +1,57 @@
+<!-- <script>
+    console.log(3)
+</script> -->
+
+<!DOCTYPE html>
+<!-- <script>
+    console.log(2)
+</script> -->
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+
+
+</body>
+
+
+</html>
+
+<script>
+    //前序
+    function preOrder(root, ans) {
+        // 边界处理：如果树为空，那么不需要处理
+        if (root != null) {
+            // 先访问根结点
+            ans.add(root.val);
+            // 再分别访问左子树
+            preOrder(root.left, ans);
+            // 再访问右子树
+            preOrder(root.right, ans);
+        }
+    }
+    // 中序
+    function mOrder(root, ans) {
+        // 边界处理：如果树为空，那么不需要处理
+        if (root != null) {
+            // 再分别访问左子树
+            mOrder(root.left, ans);
+            // 先访问根结点
+            ans.add(root.val);
+
+            // 再访问右子树
+            mOrder(root.right, ans);
+        }
+    }
+
+
+
+
+</script>

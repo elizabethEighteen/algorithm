@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+
+    <script>
+        function TreeNode(val, left, right) {
+            // 树结点中的元素值
+            this.val = val;
+            // 二叉树结点的左子结点
+            this.left = left;
+            // 二叉树结点的右子结点
+            this.right = right;
+        }
+
+        var tree1 = new TreeNode(6, null, null)
+        var tree2 = new TreeNode(7, null, null)
+        var tree3 = new TreeNode(8, tree1, tree2)
+        var tree4 = new TreeNode(9, null, null)
+        var tree5 = new TreeNode(3, tree4, tree3) //root
+
+
+
+        function Queue() {
+            this.queue = []
+        }
+        Queue.prototype.poll = function () {
+            return this.queue.shift()
+        }
+        Queue.prototype.offer = function (item) {
+            return this.queue.push(item)
+        }
+        Queue.prototype.size = function (item) {
+            return this.queue.length;
+        }
+        Queue.prototype.isEmpty = function (item) {
+            return this.queue.length == 0;
+        }
+        Queue.prototype.getLast = function (item) {
+            return this.queue[this.size() - 1];
+        }
+        Queue.prototype.removeLast = function (item) {
+            return this.queue.pop();
+        }
+        Queue.prototype.addLast = function (item) {
+            return this.queue.push(item);
+        }
+        Queue.prototype.getFirst = function (item) {
+            return this.queue[0];
+        }
+        Queue.prototype.removeFirst = function (item) {
+            return this.queue.shift()
+        }
+
+
+
+
+        function levelOrder(root) {
+            // 生成FIFO队列
+            var Q = new Queue()
+            // 如果结点不为空，那么加入FIFO队列
+            if (root != null) {
+                Q.offer(root);
+            }
+            // ans用于保存层次遍历的结果
+            var ans = [];
+            // 开始利用FIFO队列进行层次遍历
+            while (Q.size() > 0) {
+                // 取出当前层里面元素的个数
+                var qSize = Q.size();
+                // 当前层的结果存放于tmp链表中
+                var tmp = [];
+                // 遍历当前层的每个结点
+                for (var i = 0; i < qSize; i++) {
+                    // 当前层前面的结点先出队
+                    var cur = Q.poll();
+                    // 把结果存放当于当前层中
+                    tmp.push(cur.val);
+                    // 把下一层的结点入队，注意入队时需要非空才可以入队。
+                    if (cur.left != null) {
+                        Q.offer(cur.left);
+                    }
+                    if (cur.right != null) {
+                        Q.offer(cur.right);
+                    }
+                }
+                // 把当前层的结果放到返回值里面。
+                ans.push(tmp);
+            }
+            return ans;
+        }
+        // console.log(levelOrder(tree5))
+
+
+
+        //example_two  fixme
+
+
+
+        //example_three
+        function Queue3(nums, k) {
+            // 单调队列使用双端队列来实现
+            var Q = new Queue()
+            // 入队的时候，last方向入队，但是入队的时候
+            // 需要保证整个队列的数值是单调的
+            // (在这个题里面我们需要是递减的)
+            // 并且需要注意，这里是Q.getLast() < val
+            // 如果写成Q.getLast() <= val就变成了严格单调递增
+            function push(val) {
+                while (!Q.isEmpty() && Q.getLast() < val) {
+                    Q.removeLast();
+                }
+                // 将元素入队
+                Q.addLast(val);
+            }
+            // 出队的时候，要相等的时候才会出队
+            function pop(val) {
+                if (!Q.isEmpty() && Q.getFirst() == val) {
+                    Q.removeFirst();
+                }
+            }
+
+            function maxSlidingWindow(nums, k) {
+                var ans = []
+                for (var i = 0; i < nums.length; i++) {
+                    push(nums[i]);
+                    console.log(nums[i], 'push')
+                    // 如果队列中的元素还少于k个
+                    // 那么这个时候，还不能去取最大值
+                    if (i < k - 1) {
+                        continue;
+                    }
+                    console.log(Q.queue)
+                    // 队首元素就是最大值
+                    ans.push(Q.getFirst());
+                    // 尝试去移除元素
+                    pop(nums[i - k + 1]);
+                    console.log(nums[i - k + 1], i - k + 1, 'pop')
+                }
+                // 将ans转换成为数组返回!
+                return ans;
+            }
+            return maxSlidingWindow(nums, k)
+        }
+        // console.log(Queue3([1,3,-1,-3,5,3],3))
+
+
+
+        //example _four
+        function maxResult(A, k) {
+            // 处理掉各种边界条件!
+            if (A == null || A.length == 0 || k <= 0) {
+                return 0;
+            }
+            var N = A.length;
+            // 每个位置可以收集到的金币数目
+            var get = [];
+            // 单调队列，这里并不是严格递减
+            var Q = new Queue();
+            for (var i = 0; i < N; i++) {
+                // 在取最大值之前，需要保证单调队列中都是有效值。
+                // 也就是都在区间里面的值
+                // 当要求get[i]的时候，
+                // 单调队列中应该是只能保存[i-k, i-1]这个范围
+                if (i - k > 0) {
+                    if (!Q.isEmpty() && Q.getFirst() == get[i - k - 1]) {
+                        Q.removeFirst();
+                    }
+                }
+                // 从单调队列中取得较大值
+                var old = Q.isEmpty() ? 0 : Q.getFirst();
+                get[i] = old + A[i];
+                // 入队的时候，采用单调队列入队
+                while (!Q.isEmpty() && Q.getLast() < get[i]) {
+                    Q.removeLast();
+                }
+                Q.addLast(get[i]);
+            }
+            return get[N - 1];
+        }
+    </script>
+</body>
+
+</html>

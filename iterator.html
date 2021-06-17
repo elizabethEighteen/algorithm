@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+
+
+    <script>
+        // let a = {
+        //     name:'alice',
+        //     age:22
+        // }
+
+        // for(let key of a) {
+        //     console.log(key,'key')
+        // }
+
+
+
+
+
+        // var arr  = [1,2,3,4]
+        // var ite = arr.entries()
+        // console.log(ite)
+
+        // console.log(ite.next())
+        // console.log(ite.next())
+        // console.log(ite.next())
+
+
+
+
+
+
+        // var arr = [1, 2, 3, 4]
+        // var it = arr[Symbol.iterator]()
+        // console.log(it.next())
+        // console.log(it.next())
+        // console.log(it.next())
+
+
+
+
+        function myIterator(list) {
+            var i = 0;
+            return {
+                next: function () {
+                    var done = i >= list.length;
+                    var value = !done ? list[i++] : undefined;
+                    return {
+                        done: done,
+                        value: value
+                    }
+                }
+            }
+        }
+        var iterator = myIterator([1, 2, 3]);
+        iterator.next(); // "{done: false, value: 1}"
+        iterator.next(); // "{done: false, value: 2}"
+        iterator.next(); // "{done: false, value: 3}"
+        iterator.next(); // "{done: true, value: undefined}"
+        // 以后的调用都一样
+        iterator.next(); // "{done: true, value: undefined}"
+
+
+        function* myIterator() {
+            yield 1;
+            yield 2;
+            yield 3;
+        }
+        let iterator = myIterator();
+        iterator.next(); // "{done: false, value: 1}"
+        iterator.next(); // "{done: false, value: 2}"
+        iterator.next(); // "{done: false, value: 3}"
+        iterator.next(); // "{done: true, value: undefined}"
+        // 以后的调用都一样
+        iterator.next(); // "{done: true, value: undefined}"
+    </script>
+</body>
+
+</html>

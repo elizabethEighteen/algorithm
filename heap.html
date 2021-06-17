@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+
+
+    <script>
+        function Heap() {
+            this.a = new Array(100); // 表示堆的数组空间, 100作示例大小
+            this.n = 0
+
+        }
+        Heap.prototype.sink = function (i) {
+            var j = 0;
+            var t = a[i];
+            // 找到i结点的左子结点
+            while ((j = (i << 1) + 1) < n) {
+                // 比插入排序多出来的一步：需要在两个后继中找个最大的出来
+                // j < n - 1判断是否有右子结点
+                // 如果有，并且右子结点更大，那么
+                // j指向右子结点
+                if (j < n - 1 && a[j] < a[j + 1]) {
+                    j++;
+                }
+                // 如果子结点比t大
+                // 那么t的位置还需要往后排
+                if (a[j] > t) {
+                    a[i] = a[j];
+                    i = j;
+                } else {
+                    // 找到了t的位置
+                    // 此时t是大于所有的子结点的
+                    break;
+                }
+            }
+            // 将t放在找到的位置那里
+            a[i] = t;
+        }
+
+        Heap.prototype.swim = function (i) {
+            var t = a[i];
+            var par = 0;
+            // 如果还存在父结点
+            // 由于我们的下标是从0开始
+            // 0结点没有父结点
+            while (i > 0) {
+                par = (i - 1) >> 1;
+                // 如果父结点比t值小
+                if (a[par] < t) {
+                    // 那么向下移动父结点的值。
+                    a[i] = a[par];
+                    i = par;
+                } else {
+                    break;
+                }
+            }
+            a[i] = t;
+        }
+
+        Heap.prototype.push = function (v) {
+            // push是先把元素追加到数组尾巴上，然后再执行上浮操作
+            a[n++] = v;
+            swim(n - 1);
+        }
+
+        Heap.prototype.pop = function () {
+            var ret = a[0];
+            a[0] = a[--n];
+            sink(0);
+            return ret;
+        }
+
+        Heap.prototype.size = function () {
+            return this.n;
+        }
+
+
+
+
+
+
+
+        function Solution() {
+            var a = null;
+            var n = 0;
+            // .. 这里省略了堆的四种操作的代码: 参考前面的实现
+
+
+            function sink(i) {
+                var j = 0;
+                var t = a[i];
+                // 找到i结点的左子结点
+                while ((j = (i << 1) + 1) < n) {
+                    // 比插入排序多出来的一步：需要在两个后继中找个最大的出来
+                    // j < n - 1判断是否有右子结点
+                    // 如果有，并且右子结点更大，那么
+                    // j指向右子结点
+                    if (j < n - 1 && a[j] < a[j + 1]) {
+                        j++;
+                    }
+                    // 如果子结点比t大
+                    // 那么t的位置还需要往后排
+                    if (a[j] > t) {
+                        a[i] = a[j];
+                        i = j;
+                    } else {
+                        // 找到了t的位置
+                        // 此时t是大于所有的子结点的
+                        break;
+                    }
+                }
+                // 将t放在找到的位置那里
+                a[i] = t;
+            }
+
+            function swim(i) {
+                var t = a[i];
+                var par = 0;
+                // 如果还存在父结点
+                // 由于我们的下标是从0开始
+                // 0结点没有父结点
+                while (i > 0) {
+                    // console.log(i)
+                    par = (i - 1) >> 1;
+                    // console.log(i,   par)
+                    // 如果父结点比t值小
+                    if (a[par] < t) {
+                        // 那么向下移动父结点的值。
+                        a[i] = a[par];
+                        i = par;
+                    } else {
+                        break;
+                    }
+                }
+                a[i] = t;
+            }
+
+            function push(v) {
+                // push是先把元素追加到数组尾巴上，然后再执行上浮操作
+                a[n++] = v;
+                swim(n - 1);
+            }
+
+            function pop() {
+                var ret = a[0];
+                a[0] = a[--n];
+                sink(0);
+                return ret;
+            }
+
+            function size() {
+                // 返回堆中元素的个数
+                return n;
+            }
+
+            function getLeastNumbers(arr, k) {
+                if (k <= 0 || arr == null || arr.length == 0) {
+                    return new Array(0);
+                }
+                // 初始化堆, 注意大小要为k + 1
+                a = new Array(k + 1);
+                n = 0;
+                for (var i = 0; i < arr.length; i++) {
+                    var x = arr[i]
+                    // 首先将元素压入堆中
+                    // 如果堆中已经有k个元素
+                    // 此时压入，会有k+1个元素，
+                    // 所以初始化时，申请数组大小需要为k+1
+                    push(x);
+                    // 如果堆中元素多于k个，那么扔掉最大的元素
+                    if (size() > k) {
+                        pop();
+                    }
+                }
+                // 返回最小的k个数
+                var ans = new Array(k);
+                var i = 0;
+                while (size() > 0) {
+                    ans[i++] = pop();
+                }
+                return ans;
+            }
+
+
+            var arr1 = [9,3,2,8,1,7,5,6,4]
+            var num = 5;
+            console.log('go')
+            console.log(getLeastNumbers(arr1,num))
+        }
+
+        Solution()
+
+        //ln
+
+        // for(var i=0;i<5;i++) {
+        //     console.log(i<<1)
+        // }
+    </script>
+
+</body>
+
+</html>

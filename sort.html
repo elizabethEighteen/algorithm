@@ -66,10 +66,60 @@
             msort(nums, 0, nums.length, t);
         }
 
+        // var arr = [1, 7, 8, 2, 3, 5, 6, 9, 4]
+        // var arr =[1]
+        // mergeSort(arr)
+        // console.log(arr)
+
+
+        // 选择排序
+
+
+        function chooseSort(arr){
+            for(var i=0;i<arr.length;i++) {
+                var temp = arr[i]
+                for(var j=i;j<arr.length;j++) {
+                    console.log(temp,arr[j])
+                    if(temp>arr[j]) {
+                        console.log(true)
+
+                        var x = arr[j]
+                        arr[j] = temp
+                        temp = x;
+                    }
+                }
+                console.log(temp,'teo')
+                arr[i] = temp
+            }
+        }
+
+
+
+
+
+
+
         var arr = [1, 7, 8, 2, 3, 5, 6, 9, 4]
-        var arr =[1]
-        mergeSort(arr)
+         
+        // var arr = [3,2,1]
+
+        chooseSort(arr)
         console.log(arr)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     </script>
 </body>
 

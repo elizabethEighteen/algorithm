@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+
+
+    <script>
+        function throttle(fn, time) {
+            var pre = Date.now()
+            return function () {
+                var that = this;
+                var args = arguments;
+                var now = Date.now()
+                if (now - pre >= time) {
+                    fn.apply(that, args)
+                    pre = Date.now()
+                }
+            }
+        }
+
+        function handle() {
+            console.log(1)
+        }
+        // window.addEventListener('mousemove', throttle(handle, 500))
+
+
+        function throttle1(func, delay) {
+            console.log(arguments, '22')
+            var timer = null;
+            return function () {
+                if (!timer) {
+                    // console.log(this,arguments)
+                    func.apply(this, arguments);
+                    timer = setTimeout(() => {
+                        timer = null;
+                    }, delay);
+                } else {
+                    // console.log("上一个定时器尚未完成");
+                }
+            }
+        }
+        // window.addEventListener('mousemove', throttle1(handle, 500))
+
+
+
+        function debounce(func, time) {
+            var timer = null;
+            return function () {
+                // timer = setTimeout(() => {
+                //     func.apply(this, arguments)
+                //     timer = null;
+
+                // }, time);
+                if (timer) {
+                    clearInterval(timer)
+                }
+                timer = setTimeout(() => {
+                    func.apply(this, arguments)
+                }, time);
+            }
+        }
+
+        window.addEventListener('mousemove', debounce(handle, 500))
+
+        
+    </script>
+</body>
+
+</html>

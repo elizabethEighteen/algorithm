@@ -14,11 +14,10 @@
 
 
     <script>
-
         // 归并排序
         // （开闭区间）
-        function msort( a,  b,  e, t) {
-            console.log(b,e)
+        function msort(a, b, e, t) {
+            console.log(b, e)
             // 空区间 或 只有一个元素
             // 为了防止b + 1溢出，这里用b >= e先判断一下
             if (b >= e || b + 1 >= e) {
@@ -26,7 +25,7 @@
             }
             // 分成两半, 二叉树可以自动取得root.left, root.right
             // 这里我们需要通过计算来得到左右子数组。
-             var m = b + ((e - b) >> 1);
+            var m = b + ((e - b) >> 1);
 
             // 类比二叉树分别遍历左子树和右子树。
 
@@ -56,13 +55,14 @@
                 a[i] = t[i];
             }
         }
-        function  mergeSort(nums) {
+
+        function mergeSort(nums) {
             // 如果传进来的数组为空
             if (nums == null || nums.length == 0) {
                 return;
             }
             // t是一个临时中转的数组
-            var t =  [];
+            var t = [];
             msort(nums, 0, nums.length, t);
         }
 
@@ -75,12 +75,12 @@
         // 选择排序
 
 
-        function chooseSort(arr){
-            for(var i=0;i<arr.length;i++) {
+        function chooseSort(arr) {
+            for (var i = 0; i < arr.length; i++) {
                 var temp = arr[i]
-                for(var j=i;j<arr.length;j++) {
-                    console.log(temp,arr[j])
-                    if(temp>arr[j]) {
+                for (var j = i; j < arr.length; j++) {
+                    console.log(temp, arr[j])
+                    if (temp > arr[j]) {
                         console.log(true)
 
                         var x = arr[j]
@@ -88,7 +88,7 @@
                         temp = x;
                     }
                 }
-                console.log(temp,'teo')
+                console.log(temp, 'teo')
                 arr[i] = temp
             }
         }
@@ -96,28 +96,50 @@
 
 
 
+        // 快速排序
+
+        function quickSort(arr, startIndex, endIndex) {
+            if (startIndex < endIndex) {
+                //找出基准
+                var po = partition(arr, startIndex, endIndex);
+                //分成两边递归进行
+                quickSort(arr, startIndex, po - 1);
+                quickSort(arr, po + 1, endIndex);
+            }
+        }
+
+        //找基准
+        function partition(arr, startIndex, endIndex) {
+            var pivot = arr[startIndex];
+            var left = startIndex;
+            var right = endIndex;
+            while (left != right) {
+                while (left < right && arr[right] > pivot) {
+                    right--;
+                }
+                while (left < right && arr[left] <= pivot) {
+                    left++;
+                }
+                //找到left比基准大，right比基准小，进行交换
+                if (left < right) {
+                    swap(arr, left, right);
+                }
+            }
+            //第一轮完成，让left和right重合的位置和基准交换，返回基准的位置
+            swap(arr, startIndex, left);
+            return left;
+        }
+
+        //两数交换
+        function swap(arr, i, j) {
+            var temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
+        }
 
 
 
-        var arr = [1, 7, 8, 2, 3, 5, 6, 9, 4]
-         
-        // var arr = [3,2,1]
-
-        chooseSort(arr)
-        console.log(arr)
-
-
-
-
-
-
-
-
-
-
-
-
-
+        
 
 
     </script>

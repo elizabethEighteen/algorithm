@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // 1.1 写一个生成树的的构造函数
+
+      function treeMaker(data) {
+        this.data = data;
+        this.leftNode = null;
+        this.rightNode = null;
+      }
+
+      const motherNode = new treeMaker("A");
+      motherNode.leftNode = new treeMaker("B");
+      motherNode.rightNode = new treeMaker("C");
+      motherNode.leftNode.leftNode = new treeMaker("D");
+      motherNode.leftNode.rightNode = new treeMaker("E");
+      motherNode.rightNode.leftNode = new treeMaker("F");
+      motherNode.rightNode.rightNode = new treeMaker("G");
+      motherNode.rightNode.rightNode.rightNode = new treeMaker("Z");
+      console.log("------->", motherNode); // 现在就得到了一棵树
+
+      // 1.遍历的概念
+      // 先序遍历: 根节点->左子树->右子树
+      // 中序遍历: 左子树->根节点->右子树
+      // 后序遍历: 左子树->右子树->根节点
+      // 层次遍历
+
+      // 开始写算法
+
+      // 先序遍历
+      function upTraverse(tree, arr = []) {
+        arr.push(tree.data);
+        //运用递归算法 递归函数的特性会回溯 特别适用树这种结构
+        // 1.确定递归边界 当节点没有自己的时候回溯 根函数的作用域的结束
+        console.log("------->", tree.data, arr);
+        // 2. 递归式 在先序遍历中 先左， 左子树有子节点则继续往下遍历，然后遍历根节点，再就右子树的节点，右子树的子节点
+        tree.leftNode && ( upTraverse(tree.leftNode, arr));
+        tree.rightNode && (upTraverse(tree.rightNode, arr));
+        return arr;
+      }
+      let upArr = upTraverse(motherNode);
+      console.log("-------这是先序遍历的打印结果------->", upArr);
+
+      // 之前写递归的时候犯了一个错误，
+      // 因为我是在递归中要返回打印数组的把递归边界写在后面导致在传递数组的时候,跳出一个节点之后,回溯递归并没有把值传递出去
+
+      //  由此总结一个小点，当在一段需要遍历的集合之中，便可以使用递归的方法
+
+      // 中序遍历
+      function middleTraverse(tree, arr = []) {
+        tree.leftNode && (arr = middleTraverse(tree.leftNode, arr));
+        arr.push(tree.data);
+        tree.rightNode && (arr = middleTraverse(tree.rightNode, arr));
+        return arr;
+      }
+
+      let middleArr = middleTraverse(motherNode);
+      console.log(
+        "--------这是中序遍历的结果--------->",
+        motherNode,
+        middleArr
+      );
+
+      // 后序遍历
+      function downTraverse(tree, arr = []) {
+        tree.rightNode && (arr = downTraverse(tree.rightNode, arr));
+        tree.leftNode && (arr = downTraverse(tree.leftNode, arr));
+        arr.push(tree.data);
+        return arr;
+      }
+      let downArr = downTraverse(motherNode);
+      console.log("---------这是后序遍历的结果-------->", downArr);
+
+      //  层次遍历
+
+      // 方案一用map层级的方法来实现
+      function levelTraverse(tree) {
+        if (!tree.data) {
+          return [];
+        }
+        function makeItCount(tree, deep, mapObj) {
+          console.log("------>", tree.data, deep);
+          let newDepp = deep + 1;
+          mapObj[newDepp]
+            ? mapObj[newDepp].push(tree.data)
+            : (mapObj[newDepp] = [tree.data]);
+          tree.leftNode && makeItCount(tree.leftNode, newDepp, mapObj);
+          tree.rightNode && makeItCount(tree.rightNode, newDepp, mapObj);
+        }
+        let obj = {};
+        makeItCount(tree, 0, obj);
+        // return Object.values(obj).reduce((pre,curr)=> [...pre,...curr],[])
+        return Object.values(obj);
+      }
+      const levelArr = levelTraverse(motherNode);
+      console.log("---层级遍历---->", levelArr);
+    </script>
+  </body>
+</html>

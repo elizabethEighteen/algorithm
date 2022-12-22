@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      function compose() {
+        var args = arguments;
+        var start = args.length - 1;
+        return function () {
+          var i = start - 1;
+          var result = args[start].apply(this, arguments);
+          while (i >= 0) {
+            result = args[i].call(this, result);
+            i--;
+          }
+          return result;
+        };
+      }
+
+      function addHello(str) {
+        return "hello " + str;
+      }
+      function toUpperCase(str) {
+        return str.toUpperCase();
+      }
+      function reverse(str) {
+        return str.split("").reverse().join("");
+      }
+
+      var composeFn = compose(reverse, toUpperCase, addHello);
+
+      console.log(composeFn("ttsy")); // YSTT OLLEH
+
+      // 参数只能从左到右传递
+      //   function createCurry(func, arrArgs) {
+      //     var args = arguments;
+      //     var funcLength = func.length;
+      //     var arrArgs = arrArgs || [];
+
+      //     return function (param) {
+      //       var allArrArgs = arrArgs.concat([param]);
+
+      //       // 如果参数个数小于最初的func.length，则递归调用，继续收集参数
+      //       if (allArrArgs.length < funcLength) {
+      //         return args.callee.call(this, func, allArrArgs);
+      //       }
+
+      //       // 参数收集完毕，则执行func
+      //       return func.apply(this, allArrArgs);
+      //     };
+      //   }
+
+      //   // createCurry 返回一个柯里化函数
+      //   var addCurry = createCurry(function (a, b, c) {
+      //     return a + b + c;
+      //   });
+
+      //   console.log(addCurry(1)(2)(3)); // 6
+      //   console.log(addCurry(1)(2,3))
+
+      //   // 参数只能从左到右传递
+      function createCurry(func, arrArgs) {
+        var args = arguments;
+        var funcLength = func.length;
+        var arrArgs = arrArgs || [];
+
+        return function () {
+          var _arrArgs = Array.prototype.slice.call(arguments);
+          var allArrArgs = arrArgs.concat(_arrArgs);
+
+          // 如果参数个数小于最初的func.length，则递归调用，继续收集参数
+          if (allArrArgs.length < funcLength) {
+            return args.callee.call(this, func, allArrArgs);
+          }
+
+          // 参数收集完毕，则执行func
+          return func.apply(this, allArrArgs);
+        };
+      }
+      //   createCurry 返回一个柯里化函数
+      var addCurry = createCurry(function (a, b, c) {
+        return a + b + c;
+      });
+    //   console.log(addCurry(1)(2)(3)); // 6
+    //   console.log(addCurry(1, 2, 3)); // 6
+    //   console.log(addCurry(1, 2)(3)); // 6
+    //   console.log(addCurry(1)(2, 3)); // 6
+    //   console.log(addCurry(1)(2))
+    //   console.log(addCurry(1)(2)(3))
+
+
+    // const fn1 = x=>y=>x(y)
+    // const fn2 = f=>x=>f(x)
+    // const add1 = (f=>f(5))(x=>x+2)
+    // console.log(add1)
+    // const add2 = (x=>y=>x+y)(2)(5)
+    // console.log(add2)
+    // const add3 = (x=>x+2)(5)
+    // console.log(add3)
+    // const add4 = 2+5
+
+    const zero = f=>x=>f(x)
+    const one = f=>x=>f(f(x))
+    const two = f=>x=>f(f(f(x)))
+    const times =  n=>f=>new Array(n).fill(f).reduce( (acc,f)=>{
+        // console.log(acc)
+        return x=>f(acc(x))
+    })
+    const countTimes = x=>x+1
+    console.log('count',times(8)(countTimes)(0))
+    console.log(times(8)(countTimes))
+
+
+    var arr = [1,2,3]
+    arr.reduce((total,now)=>{
+        console.log(total,now)
+        return total +now
+    })
+    var SUCC = n=>f=>x=>times(n)(f)(x)
+    var PLUS = m=>n=>f=>x=>times(m)(f)(times(n)(f)(x))
+    console.log(SUCC(4)(countTimes)(0))
+    console.log(PLUS(5)(6)(countTimes)(0))
+
+
+
+    </script>
+  </body>
+</html>

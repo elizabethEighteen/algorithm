@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      class listNode {
+        constructor(x) {
+          this.val = x;
+          this.next = null;
+        }
+      }
+      class linkList {
+        constructor() {
+          this.dummy = new listNode();
+          this.tail = this.dummy;
+          this.length = 0;
+        }
+        addAtTail(val) {
+          this.tail.next = new listNode(val);
+          this.tail = this.tail.next;
+          this.length++;
+        }
+        addAtHead(val) {
+          let p = new listNode(val);
+          p.next = this.dummy.next;
+          this.dummy.next = p;
+          if (this.tail === this.dummy) {
+            this.tail = p;
+          }
+          length++;
+        }
+        getPrevNode(index) {
+          let front = this.dummy.next;
+          let back = this.dummy;
+          for (let i = 0; i < index && front !== null; i++) {
+            back = front;
+            front = front.next;
+          }
+          return back;
+        }
+        getIndex(index) {
+          if (index < 0 || index >= this.length) {
+            return -1;
+          }
+          return this.getPrevNode(index).next.val;
+        }
+        addAtIndex(index, val) {
+          let p = new listNode(val);
+          if (index > this.length) {
+            return;
+          } else if (index === this.length) {
+            addAtTail(val);
+          } else if (index <= 0) {
+            addAtHead(val);
+          } else {
+            let p = new listNode(val);
+            let prev = this.getPrevNode(index);
+            p.next = prev.next;
+            prev.next = p;
+          }
+          this.length++;
+        }
+        deleteAtIndex(index) {
+          if (index < 0 || index >= this.length) {
+            return;
+          }
+          let prev = this.getPrevNode(index);
+          if (tail === prev.next) {
+            tail = prev;
+          }
+          prev.next = prev.next.next;
+          length--;
+        }
+      }
+      // let a = new linkList();
+      // a.addAtTail(2);
+      // console.log(a);
+      let a = new linkList()
+      a.addAtTail(1)
+      a.addAtTail(2)
+      a.addAtTail(3)
+      console.log(a)
+      let one = a.dummy
+      console.log(one)
+      while(one.next) {
+        console.log(one.next.val)
+        one = one.next
+      }
+
+    </script>
+  </body>
+</html>

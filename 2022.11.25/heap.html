@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+
+    <script>
+        /**
+         * 堆的表示
+            大部分时候都是使用数组表示一个堆，而不是使用二叉树。这是因为:
+
+            数组的内存具有连续性，访问速度更快；
+
+            堆结构是一棵完全二叉树。
+
+            如下图所示，堆的规律有如下几点：
+
+            i 结点的父结点 par = (i-1)/2
+
+            i 结点的左子结点 2 * i + 1
+
+            i 结点的右子结点 2 * i + 2
+        */
+
+        let a = new Array(100)
+        // 堆中元素的个数
+        let n =0
+        function sink (i) {
+            let j = 0;
+            let t = a[i]
+            while ((j=i<<1+1)<n) {
+                if(j<n-1 && a[j]<a[j+1]) {
+                    j++
+                }
+                if(a[j]>t) {
+                    a[i] = a[j]
+                    i = j
+                }else {
+                    break
+                }
+            }
+            a[i] = t
+        }
+        function swim (i) {
+            let par = 0
+            let t = a[i]
+            while(i>0) {
+                par = (i-1)>>1
+                if(a[par]<t) {
+                     a[i] = a[par]
+                     i = par   
+                }else {
+                    break
+                }
+            }
+            a[i] = t
+        }
+        function push (v) {
+            a[n++] = v
+            swim(n-1)
+        }
+        function pop() {
+            let ret = a[0]
+            a[0] = a[--n]
+            sink(0)
+            return ret
+        }
+        function size() {
+            return n;
+        }
+        /**
+         * 例 1：最小的 k 个数
+            【题目】给定一个数组 a[]，返回这个数组中最小的 k 个数。
+
+            输入：A = [3,2,1], k = 2
+
+            输出：[2, 1]
+        */
+       function getLeastNumbers (arr,k) {
+        if(k<=0 || arr ==null || arr.length == 0) {
+            return []
+        }
+        a = new Array(k+1)
+        n=0;
+        for(let i=0;i<arr.length;i ++) {
+            push(arr[i])
+            if(size()>k) {
+                pop()
+            }
+        }
+        let ans = new Array(k)
+        let i =0
+        while(size()>0) {
+            ans[i++] = pop()
+        }
+        return ans
+       }
+    //    console.log(getLeastNumbers([9,3,2,8,1,7,5,6,4],4))
+    /**
+     * 【题目】假设你正在玩跳跃游戏，从低处往高处跳的时候，可以有两种方法。
+
+        方法一：塞砖块，但是你拥有砖块数是有限制的。为了简单起见，高度差就是你需要砖块数。
+
+        方法二：用梯子，梯子可以无视高度差（你可以认为再高也能爬上去），但是梯子的个数是有限的(一个只能用一次)。
+
+        其他无论是平着跳，还是从高处往低处跳，不需要借助什么就可以完成（在这道题中我们默认无论从多高跳下来，也摔不死）。
+
+        给你一个数组，用来表示不同的高度。假设你总是站在 index = 0 的高度开始。那么请问，你最远能跳到哪里?
+
+        输入：[3, 1, 6, 20, 10, 20], bricks = 5, landers = 1
+
+        输出：4
+    */
+   
+
+    /**
+     * 【题目】一辆汽车携带 startFuel 升汽油从位置 0 出发前往位置 target，按顺序有一系列加油站 stations。第 i 个加油站位于 stations[i][0]，可以加 stations[i][1] 升油（一个加油站只能加一次）。如果想要到达 target，输出最少加油次数。如果不能到达 target，那么返回 -1。
+
+        两个条件：
+
+        假设汽车油箱总是很大；
+
+        假设行走一单位距离，消耗一升汽油。
+
+        示例：
+
+        输入：target = 100, startFuel = 10, stations = [[10, 60], [20, 30], [30, 30], [60, 40]]
+
+        输出：2
+    */
+   
+    </script>
+</body>
+</html>

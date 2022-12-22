@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // class FindUnion {
+      //     constructor(n) {
+      //         this.color = new Array (n+1)
+      //         for( let i=0;i<=n;i++) {
+      //             this.color[i] = i;
+      //         }
+      //     }
+      //     find(x) {
+      //         return this.color[x]
+      //     }
+      //     merge(a,b) {
+      //         if(this.color[a] === this.color[b]) {
+      //             return
+      //         }
+      //         let cb = this.color[b]
+      //         for(let i=0;i<=n;i++) {
+      //             if(this.color[i] === cb) {
+      //                 this.color[i] = this.color[a]
+      //             }
+      //         }
+      //         return
+      //     }
+      // }
+
+      var findCircleNum = function (isConnected) {
+        let n = isConnected.length;
+        // 节点数量就是城市数量
+        let u = new UnionSet(n);
+        for (let i = 0; i < n; i++) {
+          // 无需遍历全部，i与j相连等同于j与i相连
+          for (let j = 0; j < i; j++) {
+            if (isConnected[i][j]) u.merge(i, j);
+          }
+        }
+        let ans = 0;
+        // 查看并查集中有多少个集合，即有多少个根节点
+        for (let i = 0; i < n; i++) {
+          if (u.get(i) === i) ans += 1;
+        }
+        return ans;
+      };
+      // 后续代码中不包含并查集的构造方法，可以回来查阅
+      class UnionSet {
+        constructor(n) {
+          this.father = new Array(n + 1);
+          for (let i = 0; i <= n; i++) {
+            this.father[i] = i;
+          }
+        }
+        get(x) {
+          return (this.father[x] =
+            this.father[x] === x ? x : this.get(this.father[x]));
+        }
+        merge(a, b) {
+          this.father[this.get(a)] = this.get(b);
+        }
+      }
+    </script>
+  </body>
+</html>

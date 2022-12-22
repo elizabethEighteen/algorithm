@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      /**
+         * 例：大鱼吃小鱼
+            【题目】在水中有许多鱼，可以认为这些鱼停放在 x 轴上。再给定两个数组 Size，Dir，Size[i] 表示第 i 条鱼的大小，Dir[i] 表示鱼的方向 （0 表示向左游，1 表示向右游）。
+            这两个数组分别表示鱼的大小和游动的方向，并且两个数组的长度相等。鱼的行为符合以下几个条件:
+
+            1.所有的鱼都同时开始游动，每次按照鱼的方向，都游动一个单位距离；
+
+            2.当方向相对时，大鱼会吃掉小鱼；
+
+            3.鱼的大小都不一样。
+
+            输入：Size = [4, 2, 5, 3, 1], Dir = [1, 1, 0, 0, 0]
+
+            输出：3
+        */
+      function solution(fishSize, fishDirection) {
+        let fishNumber = fishSize.length;
+        if (fishNumber <= 1) {
+          return fishNumber;
+        }
+        let left = 0;
+        let right = 1;
+        let stack = [];
+        for (let i = 0; i < fishNumber; i++) {
+          let size = fishSize[i];
+          let direction = fishDirection[i];
+          let hasEat = false;
+          while (stack.length>0 && fishDirection[stack[stack.length-1]] === right && direction === left) {
+            let stackSize = fishSize[stack[stack.length-1]]
+            if( stackSize>size ) {
+                hasEat = true
+                break
+            }
+            stack.splice(stack.indexOf(stack[stack.length-1]),1)
+          }
+          if(!hasEat) {
+            stack.push(i)
+          }
+        }
+        console.log(stack)
+        return stack.length
+      }
+      let size =  [4, 2, 5, 3, 1]
+      let dir = [1, 1, 0, 0, 0]
+    //   console.log(solution(size,dir))
+      /**
+       * 单调栈
+       * 例 3：找出数组中右边比我小的元素
+        【题目】一个整数数组 A，找到每个元素：右边第一个比我小的下标位置，没有则用 -1 表示。
+
+        输入：[5, 2]
+
+        输出：[1, -1]
+      */
+      function solution2 (arr) {
+        let ans = new Array(arr.length)
+        let stack = []
+        for(let i=0;i<arr.length;i++) {
+            let x = arr[i]
+            while(stack.length>0 && arr[stack[stack.length-1]] > x) {
+                ans[stack[stack.length-1]] = i
+                stack.splice(stack.indexOf(stack[stack.length-1]),1)
+            }
+            stack.push(i)
+        }
+        for(let j=0;j<stack.length;j++) {
+            ans[stack[j]] = -1
+        }
+        return ans
+      }
+      console.log(solution2([1,2,4,9,4,0,5]))
+    </script>
+  </body>
+</html>

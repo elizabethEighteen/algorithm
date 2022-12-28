@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      function fn(A, target) {
+        let l = 0;
+        r = A.length;
+        while (l < r) {
+          let m = l + ((r - l) >> 1);
+          if (A[m] === target) {
+            return true;
+          }
+          if (A[m] < target) {
+            l = m + 1;
+          } else {
+            r = m;
+          }
+          console.log(l, r);
+        }
+        // console.log(l,r)
+        return false;
+      }
+
+      //   let arr = [1, 2, 3, 4, 5];
+      //   console.log(fn(arr, 6));
+
+      var search = function (nums, target) {
+        let lo = 0,
+          hi = nums.length - 1;
+        while (lo < hi) {
+          let mid = lo + ((hi - lo) >> 1);
+          //   console.log(
+          //     nums[0] > target,
+          //     nums[0] > nums[mid],
+          //     target > nums[mid]
+          //   );
+          if (
+            (nums[0] < target) ^
+            (nums[0] < nums[mid]) ^
+            (target < nums[mid])
+          ) {
+            lo = mid + 1;
+          } else {
+            hi = mid;
+          }
+        }
+        return lo === hi && nums[lo] === target ? lo : -1;
+      };
+      console.log(search([4, 5, 6, 7, 0, 1, 2], 0));
+      //   console.log(true^true^true)
+      //   if(0) {
+      //     console.log(0)
+      //   }else {
+      //     console.log(1)
+      //   }
+
+      function myPromise(fn) {
+        this.fns = [];
+        let resolve = (val) => {
+          this.fns.forEach((item) => {
+            item(val);
+          });
+        };
+        fn(resolve);
+      }
+      myPromise.prototype.then = function (fn) {
+        return new myPromise((resolve) => {
+          this.fns.push((val) => {
+            let res = fn(val);
+            if (res instanceof myPromise) {
+              res.then(resolve);
+            } else {
+              resolve(res);
+            }
+          });
+        });
+      };
+
+
+
+      let p = new myPromise((reslove) => {
+        setTimeout(() => {
+          reslove("2");
+        }, 2000);
+      })
+        .then((res) => {
+          console.log(res);
+          return '33'
+          return new myPromise((reslove) => {
+            setTimeout(() => {
+              reslove("3");
+            }, 2000);
+          });
+        })
+        .then((res) => {
+          console.log(res);
+        });
+
+        if(true || true && false    ) {
+            console.log(122)
+        }
+    </script>
+  </body>
+</html>

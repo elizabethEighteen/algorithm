@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      //   let str = '<p><img src="1"/><img src="2"/><img src="3"/></p>';
+      //   let arr = ["4", "5", "6"];
+      //   let flag = 0;
+      //   let newStr = str.replace(/(?=src)[^>]*>*(?<=\/>)/g, (a, b, c) => {
+      //     return `src="${arr[flag++]}"/>`;
+      //   });
+      // function solution(gas, cost) {}
+      // console.log(solution());
+
+      // 会议室
+      let room = function (arr) {
+        let A = new Array(100).fill(0);
+        arr.forEach((element) => {
+          for (let i = element[0]; i < element[element.length - 1 ]; i++) {
+            A[i]++;
+          }
+        });
+        console.log(A)
+      };
+      room([
+        [0, 30],
+        [5, 10],
+        [15, 20],
+      ]);
+    </script>
+  </body>
+</html>

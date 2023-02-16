@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      let coinChange = function (coins, amount) {
+        let INF = Infinity;
+        let dp = new Array(amount + 1).fill(Infinity);
+        dp[0] = [0];
+        for (let i = 0; i < amount; i++) {
+          for (let j = 0; j < coins.length; j++) {
+            let y = coins[j];
+            if (y <= amount && i + y < amount + 1 && i + y >= 0) {
+              dp[i + y] = Math.min(dp[i + y], dp[i] + 1);
+            }
+          }
+        }
+        return dp[amount] >= Infinity ? -1 : dp[amount];
+      };
+      console.log(coinChange([1, 2, 5], 11));
+      //  不可取相邻数组项
+      let rob = function (nums) {
+        let N = nums == null ? 0 : nums.length;
+        if (N <= 0) {
+          return 0;
+        }
+        let dp = [];
+        dp[0] = Math.max(0, nums[0]);
+        if (N == 1) {
+          return dp[0];
+        }
+        dp[1] = Math.max(0, Math.max(nums[0], nums[1]));
+        for (let i = 2; i < N; i++) {
+          dp[i] = Math.max(dp[i - 1], dp[i - 2] + nums[i]);
+        }
+        console.log(dp);
+        return dp[N - 1];
+      };
+      console.log(rob([1, 2, 3, 1]));
+
+      
+    </script>
+  </body>
+</html>

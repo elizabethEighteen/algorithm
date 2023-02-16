@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // leetcoe 733 颜色渲染
+      var floodFill = function (image, sr, sc, color) {
+        let currColor = image[sr][sc]
+        if(currColor !=color) {
+            dfs(image,sr,sc,currColor,color)
+        }
+        return image
+      };
+      let dx = [1,0,0,-1]
+      let dy = [0,1,-1,0]
+      let dfs = function(image,x,y,currColor,color){
+        if(image[x][y] == currColor) {
+            image[x][y] = color
+            for(let i=0;i<4;i++) {
+                let mx = x+dx[i]
+                let my = x+dy[i]
+                if(mx>=0 && mx<image.length && my>=0 && my<image[0].length) {
+                    dfs(image,mx,my,currColor,color)
+                }
+            }
+        }
+      }
+    </script>
+  </body>
+</html>

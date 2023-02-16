@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <script>
+        function log2(N) {
+            return Math.ceil(Math.log(N)/Math.log(2))
+        }
+        function createST(N) {
+            let powerOf2 = log2(N)
+            let st = new Array(N).fill(new Array(powerOf2+1))
+            return st
+        }
+        function buildST(A,st) {
+            let N = A.length
+            for(let i=0;i<N;i++) {
+                console.log(A[i])
+                const p = A[i]
+                st[i][0] =A[i]
+                console.log(st[i])
+            }
+            for(let j=1;(1<<j)<=N;j++) {
+                for(let i=0;(i+(1<<j))<=N;i++) {
+                    st[i][j] = Math.min(st[i][j-1],st[i+(1<<(j-1))][j-1])
+                }
+            }
+            return st
+        }
+
+    </script>
+    
+</body>
+</html>

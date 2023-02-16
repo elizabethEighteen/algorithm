@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // 回溯算法
+      let ds = [
+        "",
+        "",
+        "abc",
+        "def",
+        "ghi",
+        "jkl",
+        "mno",
+        "pqrs",
+        "tuv",
+        "wxyz",
+      ];
+      let backtrace = (A, i, box, ans) => {
+        let N = A == null ? 0 : A.length;
+        console.log(i);
+        console.log(N);
+        if (box.length == N) {
+          ans.push(box.join(""));
+        }
+        if (i >= N) {
+          return;
+        }
+        // debugger
+        let stoneIndex = Number(A.charAt(i));
+        console.log(stoneIndex);
+        for (let idx = 0; idx < ds[stoneIndex].length; idx++) {
+          let stone = ds[stoneIndex].charAt(idx);
+          box.push(stone);
+          backtrace(A, i + 1, box, ans);
+          box.pop();
+        }
+      };
+      let letterCombinations = (A) => {
+        if (A == null || A.length == 0) {
+          return [];
+        }
+        let box = [];
+        let ans = [];
+        backtrace(A, 0, box, ans);
+        return ans;
+      };
+      console.log(letterCombinations("23"));
+    </script>
+  </body>
+</html>

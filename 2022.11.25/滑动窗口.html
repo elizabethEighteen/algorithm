@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      function resolve(s) {
+        const occ = new Set();
+        const n = s.length;
+        let rk = -1,
+          ans = 0;
+        for (let i = 0; i < n; ++i) {
+          if (i != 0) {
+            occ.delete(s.charAt(i - 1));
+          }
+          while (rk + 1 < n && !occ.has(s.charAt(rk + 1))) {
+            occ.add(s.charAt(rk + 1));
+            ++rk;
+          }
+          ans = Math.max(ans, rk - i + 1);
+        }
+        return ans;
+      }
+      console.log(resolve("abcabcbb"));
+
+      function reslove1(s, words) {
+        const res = [];
+        const m = words.length,
+          n = words[0].length,
+          ls = s.length;
+        for (let i = 0; i < n; i++) {
+          if (i + m * n > ls) {
+            break;
+          }
+          const differ = new Map();
+          for (let j = 0; j < m; j++) {
+            const word = s.substring(i + j * n, i + (j + 1) * n);
+            differ.set(word, (differ.get(word) || 0) + 1);
+          }
+          for (const word of words) {
+            differ.set(word, (differ.get(word) || 0) - 1);
+            if (differ.get(word) === 0) {
+              differ.delete(word);
+            }
+          }
+          for (let start = i; start < ls - m * n + 1; start += n) {
+            if (start !== i) {
+              let word = s.substring(start + (m - 1) * n, start + m * n);
+              differ.set(word, (differ.get(word) || 0) + 1);
+              if (differ.get(word) === 0) {
+                differ.delete(word);
+              }
+              word = s.substring(start - n, start);
+              differ.set(word, (differ.get(word) || 0) - 1);
+              if (differ.get(word) === 0) {
+                differ.delete(word);
+              }
+            }
+            console.log(differ);
+            if (differ.size === 0) {
+              res.push(start);
+            }
+          }
+        }
+        return res;
+      }
+      // reslove1("barfoothefoobarman", ["foo", "bar"]);
+      // three
+
+      function resolve3(s, t) {
+        let ori = new Map();
+        let cnt = new Map();
+
+        let tlen = t.length;
+        for (let i = 0; i < tlen; i++) {
+          let c = t.charAt(i);
+          ori.set(c, (ori.get(c) || 0) + 1);
+        }
+        let l = 0,
+          r = -1;
+        let len = Infinity,
+          ansL = -1,
+          ansR = -1;
+        let sLen = s.length;
+        while (r < sLen) {
+          ++r;
+          if (r < sLen && ori.get(s.charAt(r))) {
+            cnt.set(s.charAt(r), (cnt.get(s.charAt(r)) || 0 ) + 1);
+          }
+          while (check3() && l <= r) {
+            if (r - l + 1 < len) {
+              len = r - l + 1;
+              ansL = l;
+              ansR = l + len;
+            }
+            if (ori.get(s.charAt(l))) {
+              cnt.set(s.charAt(l), (cnt.get(s.charAt(l)) || 0) - 1);
+            }
+            ++l;
+          }
+        }
+        return ansL == -1 ? "" : s.substring(ansL, ansR);
+
+        function check3() {
+          for (let val of ori.keys()) {
+            if ((cnt.get(val) || 0) < (ori.get(val) || 0)) {
+              return false;
+            }
+          }
+          return true;
+        }
+      }
+
+      console.log(resolve3("ADOBECODEBANC", "ABC"));
+    </script>
+  </body>
+</html>

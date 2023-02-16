@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      let dx = [1, 0, 0, -1];
+      let dy = [0, 1, -1, 0];
+      let floodFill = function (image, sr, sc, color) {
+        let currColor = image[sr][sc];
+        if (currColor == color) {
+          return image;
+        }
+        let n = image.length;
+        let m = image[0].length;
+        let queque = [];
+        queque.push([sr, sc]);
+        while (queque.length > 0) {
+          let cell = queque.shift();
+          let x = cell[0];
+          let y = cell[1];
+          for (let i = 0; i < 4; i++) {
+            let mx = x + dx[i];
+            let my = y + dy[i];
+            if (
+              mx >= 0 &&
+              mx < n &&
+              my >= 0 &&
+              my < m &&
+              image[mx][my] == currColor
+            ) {
+              queque.push([mx, my]);
+              image[mx][my] = color;
+            }
+          }
+        }
+        return image;
+      };
+      let image = [
+          [0, 0, 0],
+          [0, 0, 0],
+        ],
+        sr = 0,
+        sc = 0,
+        newColor = 2;
+      console.log(floodFill(image, sr, sc, newColor));
+    </script>
+  </body>
+</html>

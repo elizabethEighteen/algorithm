@@ -5,67 +5,253 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <style>
+      body {
+        padding: 0;
+        margin: 0;
+      }
+    </style>
   </head>
   <body>
-    <script>
-      //   let str = '<p><img src="1"/><img src="2"/><img src="3"/></p>';
-      //   let arr = ["4", "5", "6"];
-      //   let flag = 0;
-      //   let newStr = str.replace(/(?=src)[^>]*>*(?<=\/>)/g, (a, b, c) => {
-      //     return `src="${arr[flag++]}"/>`;
-      //   });
-      // function solution(gas, cost) {}
-      // console.log(solution());
+    <script type="module">
+      import * as THREE from "https://threejsfundamentals.org/threejs/resources/threejs/r132/build/three.module.js";
+      import { OrbitControls } from "https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/controls/OrbitControls.js";
 
-      // 会议室
-      let room = function (arr) {
-        let A = new Array(100).fill(0);
-        arr.forEach((element) => {
-          for (let i = element[0]; i < element[element.length - 1]; i++) {
-            A[i]++;
-          }
-        });
-        // console.log(A);
-      };
-      room([
-        [0, 30],
-        [5, 10],
-        [15, 20],
-      ]);
-      // 并查集
-      var findCircleNum = function (isConnected) {
-        let n = isConnected.length;
-        let u = new UnionSet(n);
-        for (let i = 0; i < n; i++) {
-          for (let j = 0; j < i; j++) {
-            if (isConnected[i][j]) u.merge(i, j);
-          }
-        }
-        let ans = 0;
-        for (let i = 0; i < n; i++) {
-          if (u.get(i) === i) {
-            ans += 1;
-          }
-        }
-        return ans;
-      };
-
-      class UnionSet {
-        constructor(n) {
-          this.father = new Array(n + 1);
-          for (let i = 0; i <= n; i++) {
-            this.father[i] = i;
-          }
-        }
-        get(x) {
-          return (this.father[x] =
-            this.father[x] === x ? x : this.get(this.father[x]));
-        }
-        merge(a, b) {
-          this.father[this.get(a)] = this.get(b);
-        }
+      // const canvas = document.querySelector('#2d')
+      // 渲染器
+      const renderer = new THREE.WebGLRenderer();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+      // 创建相机的方法
+      function makeCamera(fov = 40) {
+        const aspect = window.innerWidth / window.innerHeight;
+        const zNear = 0.1;
+        const zFar = 1000;
+        return new THREE.PerspectiveCamera(fov, aspect, zNear, zFar);
       }
-      findCircleNum([[1,1,0],[1,1,0],[0,0,1]])
+
+      const camera = makeCamera();
+      // .multiplyScalar() 矩阵的每个元素乘以参数
+      // camera.position.set(0, 0, 40).multiplyScalar(3);
+      camera.position.set(8, 4, 10).multiplyScalar(3);
+      // camera.position.set(8, 4, 10)
+      // 朝向
+      camera.lookAt(0, 0, 0);
+      //控制相机
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.update();
+      // 场景
+      const scene = new THREE.Scene();
+      {
+        //方向光
+        const light = new THREE.DirectionalLight(0xffffff, 1);
+        light.position.set(0, 20, 0);
+        scene.add(light);
+      }
+      {
+        //方向光
+        const light = new THREE.DirectionalLight(0xfffff, 1);
+        light.position.set(1, 2, 4);
+        scene.add(light);
+      }
+      {
+        //平面几何
+        const groundGeomerty = new THREE.PlaneGeometry(50, 50);
+        const groundMaterial = new THREE.MeshPhongMaterial({ color: 0xcc8866 });
+        const groundMesh = new THREE.Mesh(groundGeomerty, groundMaterial);
+        groundMesh.rotation.x = Math.PI * -0.5;
+        scene.add(groundMesh);
+      }
+      const tank = new THREE.Object3D();
+      scene.add(tank);
+      //创建底盘
+      const carWidth = 4;
+      const carHeight = 1;
+      const carLength = 8;
+      // 几何体
+      const bodyGeometry = new THREE.BoxGeometry(
+        carWidth,
+        carHeight,
+        carLength
+      );
+      const bodyMaterial = new THREE.MeshPhongMaterial({ color: 0xcc88aa });
+      const bodyMesh = new THREE.Mesh(bodyGeometry, bodyMaterial);
+      bodyMesh.position.y = 1.4;
+      tank.add(bodyMesh);
+      {
+        //创建底盘
+        const carWidth = 4;
+        const carHeight = 1;
+        const carLength = 8;
+        // 几何体
+        const bodyGeometry = new THREE.BoxGeometry(
+          carWidth,
+          carHeight,
+          carLength
+        );
+        const bodyMaterial = new THREE.MeshPhongMaterial({ color: 0xcc88aa });
+        const bodyMesh = new THREE.Mesh(bodyGeometry, bodyMaterial);
+        bodyMesh.position.y = 1.4;
+        bodyMesh.position.x = 10;
+        tank.add(bodyMesh);
+      }
+
+      const wheelRadius = 1;
+      const wheelThickness = 0.5;
+      const wheelSegments = 36;
+      // 圆柱体
+      const wheelGeometry = new THREE.CylinderGeometry(
+        wheelRadius,
+        wheelRadius,
+        wheelThickness,
+        wheelSegments
+      );
+      const wheelMaterial = new THREE.MeshPhongMaterial({ color: 0x888888 });
+      const wheelPositions = [
+        [-carWidth / 2 - wheelThickness / 2, -carHeight / 2, carLength / 3],
+        [carWidth / 2 + wheelThickness / 2, -carHeight / 2, carLength / 3],
+        [-carWidth / 2 - wheelThickness / 2, -carHeight / 2, 0],
+        [carWidth / 2 + wheelThickness / 2, -carHeight / 2, 0],
+        [-carWidth / 2 - wheelThickness / 2, -carHeight / 2, -carLength / 3],
+        [carWidth / 2 + wheelThickness / 2, -carHeight / 2, -carLength / 3],
+      ];
+      const wheelMeshes = wheelPositions.map((position) => {
+        const mesh = new THREE.Mesh(wheelGeometry, wheelMaterial);
+        mesh.position.set(...position);
+        mesh.rotation.z = Math.PI * 0.5;
+        bodyMesh.add(mesh);
+        return mesh;
+      });
+      // 底盘局部相机
+      const tankCameraFov = 75;
+      const tankCamera = makeCamera(tankCameraFov);
+      tankCamera.position.y = 3;
+      tankCamera.position.z = -6;
+      tankCamera.rotation.y = Math.PI;
+      bodyMesh.add(tankCamera);
+      // renderer.render(scene,tankCamera)
+
+      // 坦克头
+      const domeRadius = 2;
+      const domWidthSubdivisions = 12;
+      const domHeightSubdivisions = 12;
+      const domPhiStart = 0;
+      const domPhiEnd = Math.PI * 2;
+      const domeThetaStart = 0;
+      const domThetaEnd = Math.PI * 0.5;
+      const domeGeometry = new THREE.SphereGeometry(
+        domeRadius,
+        domWidthSubdivisions,
+        domHeightSubdivisions,
+        domPhiStart,
+        domPhiEnd,
+        domeThetaStart,
+        domThetaEnd
+      );
+      const domeMesh = new THREE.Mesh(domeGeometry, bodyMaterial);
+      bodyMesh.add(domeMesh);
+      domeMesh.position.y = 0.5;
+      //炮干
+      const turretWidth = 0.5;
+      const turretHeight = 0.5;
+      const turrentLength = 5;
+      const turrentGeometry = new THREE.BoxGeometry(
+        turretWidth,
+        turretHeight,
+        turrentLength
+      );
+      const turrentMesh = new THREE.Mesh(turrentGeometry, bodyMaterial);
+      const turrentPivot = new THREE.Object3D();
+      turrentPivot.position.y = 0.5;
+      turrentPivot.position.z = turrentLength * 0.5;
+      // turrentPivot.rotation.x = Math.PI*0.5
+      turrentPivot.add(turrentMesh);
+      bodyMesh.add(turrentPivot);
+      // 目标
+      const targetGeometry = new THREE.SphereGeometry(0.5, 36, 36);
+      const targetMaterrial = new THREE.MeshPhongMaterial({
+        color: 0x00ff00,
+        flatShading: true,
+      });
+      const targetMesh = new THREE.Mesh(targetGeometry, targetMaterrial);
+      const targetElevation = new THREE.Object3D();
+      const targetBob = new THREE.Object3D();
+      scene.add(targetElevation);
+      targetElevation.position.z = carLength * 2;
+      targetElevation.position.y = 8;
+      targetElevation.add(targetBob);
+      targetBob.add(targetMesh);
+      // 获取目标全局坐标
+      const targetPosition = new THREE.Vector3();
+      targetMesh.getWorldPosition(targetPosition);
+      turrentPivot.lookAt(targetPosition);
+      // 目标上的相机
+      const targetCamera = makeCamera();
+      targetCamera.position.y = 1;
+      targetCamera.position.z = -2;
+      targetBob.add(targetCamera);
+      // 绘制移动路径
+      const curve = new THREE.SplineCurve([
+        new THREE.Vector2(-10, 20),
+        new THREE.Vector2(-5, 5),
+        new THREE.Vector2(0, 0),
+        new THREE.Vector2(5, -5),
+        new THREE.Vector2(10, 0),
+        new THREE.Vector2(5, 10),
+        new THREE.Vector2(-5, 10),
+        new THREE.Vector2(-10, -10),
+        new THREE.Vector2(-15, -8),
+        new THREE.Vector2(-10, 20),
+      ]);
+      const points = curve.getPoints(50);
+      const geometry = new THREE.BufferGeometry().setFromPoints(points);
+      const material = new THREE.LineBasicMaterial({ color: 0xff0000 });
+      const splineObject = new THREE.Line(geometry, material);
+      splineObject.rotation.x = Math.PI * 0.5;
+      splineObject.position.y = 0.05;
+      scene.add(splineObject);
+      const targetPosition2 = new THREE.Vector3();
+      const tankPosition = new THREE.Vector2();
+      const tankTarget = new THREE.Vector2();
+
+      const cameras = [
+        { cam: camera, desc: "全局相机" },
+        { cam: targetCamera, desc: "目标相机" },
+        { cam: tankCamera, desc: "底盘相机" },
+      ];
+
+      function render(time) {
+        // renderer.render(scene,camera)
+        // // renderer.render(scene,tankCamera)
+        // requestAnimationFrame(render)
+        time *= 0.001;
+        // 上下移动目标
+        targetBob.position.y = Math.sin(time * 2) * 4;
+        targetMaterrial.emissive.setHSL((time * 10) % 1, 1, 1, 0.25);
+        targetMaterrial.color.setHSL((time * 10) % 1, 1, 1, 0.25);
+        // 获取目标全局坐标
+        targetMesh.getWorldPosition(targetPosition2);
+        // 炮台瞄准目标
+        turrentPivot.lookAt(targetPosition2);
+
+        // 根据线路移动坦克
+        const tankTime = (time *= 0.05);
+        curve.getPointAt(tankTime % 1, tankPosition);
+        // 获取路径，坦克前一点坐标 用于坦克头向前
+        curve.getPointAt((tankTime + 0.01) % 1, tankTarget);
+        // 位移
+        tank.position.set(tankPosition.x, 0, tankPosition.y);
+        tank.lookAt(tankTarget.x, 0, tankTarget.y);
+        // 切换相机
+        const camera1 = cameras[time % cameras.length | 0];
+        // console.log(camera1);
+        tank.getWorldPosition(targetPosition2);
+        targetCamera.lookAt(targetPosition2);
+        renderer.render(scene, camera1.cam);
+        // renderer.render(scene,camera)
+        requestAnimationFrame(render);
+      }
+      requestAnimationFrame(render);
     </script>
   </body>
 </html>

@@ -69,7 +69,7 @@
             let x = arr[i]
             while(stack.length>0 && arr[stack[stack.length-1]] > x) {
                 ans[stack[stack.length-1]] = i
-                stack.splice(stack.indexOf(stack[stack.length-1]),1)
+                stack.splice(stack.indexOf(stack[stack.length-1]),1) // delete 该元素
             }
             stack.push(i)
         }
@@ -79,6 +79,8 @@
         return ans
       }
       console.log(solution2([1,2,4,9,4,0,5]))
+
+      console.log([1,2,3].indexOf(2))
     </script>
   </body>
 </html>
